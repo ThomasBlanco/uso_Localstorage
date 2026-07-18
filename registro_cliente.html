@@ -8,16 +8,19 @@
 
 <body>
     <div>nombre:</div>
-    <input type="text" id="nombre"">
-    <button id="boton_registrar" >Registrar</button>
-
+    <input type="text" id="nombre" placeholder="nombre">
     <div>apellido:</div>
-    <input type="text" id="apellido"">
+    <input type="text" id="apellido" placeholder="apellido">
+    <br> 
+    <select id="rol">
+        <option value="cliente">Cliente</option>
+        <option value="administrador">Administrador</option>
+        <option value="invitado">invitado</option>
+    </select>
+
     <button id="boton_registrar" >Registrar</button>
 
-    <div>rol:</div>
-    <input type="text" id="rol"">
-    <button id="boton_registrar" >Registrar</button>
+    <p id="mensaje"></p>
 </body>
 
 <script type="module" src="./controlador.js" ></script>
