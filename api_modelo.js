@@ -1,16 +1,27 @@
-export default class Api_modelo {
-export {controlador} from "./controlador.js";
+export default class Apimodelo {
+guardar_cliente(lista_cliente, obj_cliente) {
+    // obtener la lista guardada
+    const stored = localStorage.getItem(lista_cliente);
+    const lista = stored ? JSON.parse(stored) : [];
 
-    guardar_cliente(lista_cliente, obj_cliente) {
-        //get --: Tomar la info
-        const lista = localStorage.getItem(JSON.parse(lista_cliente));
-        lista.push(obj_cliente);
-        //set --: sobreescribir la info
-        localStorage.setItem(lista_cliente, JSON.stringify(lista));
+    // verificar si el cliente ya existe
+    const existe_cliente = lista.filter(cliente =>
+        cliente.nombre === obj_cliente.nombre &&
+        cliente.apellido === obj_cliente.apellido
+    );
+    if (existe_cliente.length > 0) {
+        return false;
     }
 
+    // agregar y guardar cliente
+    lista.push(obj_cliente);
+    localStorage.setItem(lista_cliente, JSON.stringify(lista));
+    return true;
+}
+    // funcion para imprimir la lista de clientes guardados 
     imprimir_cliente() {
         const info = localStorage.getItem("lista_cliente");
-        console.log(info);
+        const lista = JSON.parse(info);
+        console.log(lista);
     }
-}
+};
