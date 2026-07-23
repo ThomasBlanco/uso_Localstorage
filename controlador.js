@@ -4,29 +4,44 @@ import ClienteModelo from "./cliente_modelo.js";
 //codigo principal
 const boton_registrar = document.getElementById("boton_registrar");
 const mensaje = document.getElementById("mensaje");
+const resultadoElem = document.getElementById("resultado");
 const api_modelo = new Apimodelo();
-
 // hacemos la funcion de registrar cliente
-boton_registrar.addEventListener("click", function() {
+if (!boton_registrar) {
+    console.error('No se encontró el botón #boton_registrar');
+} else {
+    boton_registrar.addEventListener("click", function(event) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault();
+
     const nombre = document.querySelector("#nombre").value;
     const apellido = document.querySelector("#apellido").value;
     const rol = document.querySelector("#rol").value;
-// creamos el objeto cliente
+
+    // creamos el objeto cliente (la validación y existencia la gestiona el modelo)
     const obj_cliente = new ClienteModelo(nombre, apellido, rol);
     const lista_cliente = "lista_cliente";
-//validamos el cliente antes de guardarlo
-    if (!obj_cliente.es_valido()) {
-        mensaje.textContent = "El nombre debe tener más de 3 caracteres.";
-        return;
-    }
-// llamamos a la funcion guardar_cliente y hacemos el saludo si se guardo correctamente, sino mostramos un mensaje de error
-    const se_guardo_cliente = api_modelo.guardar_cliente(lista_cliente, obj_cliente);
-    if (se_guardo_cliente) {
-        mensaje.textContent = `Hola ${nombre} ${apellido}, tu rol es: ${rol}.`;
-    } else {
-        mensaje.textContent = "Error al guardar el cliente, ya existe en el almacenamiento local.";
-    }
-});
+
+        // Saludo dinámico en la vista (responsabilidad del controlador)
+        if (mensaje) mensaje.textContent = `Hola ${nombre} ${apellido}`;
+
+        // Delegar validación y almacenamiento al modelo y mostrar su respuesta en la vista
+        const resultado = api_modelo.guardar_cliente(lista_cliente, obj_cliente);
+        console.log('Resultado almacenamiento:', resultado);
+
+        // Mostrar resultado al usuario con color según el resultado en elemento separado
+        if (resultadoElem) {
+            resultadoElem.textContent = resultado.message || '';
+            resultadoElem.style.color = resultado.success ? 'green' : 'red';
+        }
+
+        // Si se guardó correctamente, limpiar campos
+        if (resultado.success) {
+            document.querySelector("#nombre").value = '';
+            document.querySelector("#apellido").value = '';
+        }
+
+    });
+}
 
 
 /*
